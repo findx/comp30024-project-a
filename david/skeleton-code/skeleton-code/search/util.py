@@ -150,3 +150,47 @@ def print_board(board_dict, message="", compact=True, ansi=False, **kwargs):
     # fill in the template to create the board drawing, then print!
     board = template.format(multiline_message, *cells)
     print(board, **kwargs)
+
+def axial_to_cube(a):
+    """
+    Function from: https://www.redblobgames.com/grids/hexagons
+    """
+    x = a[0]
+    z = a[1]
+    y = -x-z
+    return (x, y, z)
+
+def hex_distance(a, b):
+    """
+    Function from: https://www.redblobgames.com/grids/hexagons
+    """
+    ac = axial_to_cube(a)
+    bc = axial_to_cube(b)
+    return cube_distance(ac, bc)
+
+def cube_distance(a, b):
+    """
+    Function from: https://www.redblobgames.com/grids/hexagons
+    """
+    return max(abs(a[0]-b[0]), abs(a[1]-b[1]), abs(a[2]-b[2]))
+
+def hex_direction(direction):
+    axial_directions = [
+        (1,0), (1,-1), (0,-1),
+        (-1,0), (-1,1), (0,1)
+    ]
+    return axial_directions[direction]
+
+def hex_neighbour(cell, direction):
+    dir = hex_direction(direction)
+    a = cell[0] + dir[0]
+    b = cell[1] + dir[1]
+
+    return (a, b)
+
+def neighbours(cell):
+    neighbours_list = []
+    for num in range(0,6):
+        neighbours_list.append(hex_neighbour(cell, num))
+
+    return neighbours_list
